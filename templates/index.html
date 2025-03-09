@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Classifier</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #000000;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .upload-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px dashed #ccc;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .image-container img {
+            width: 250px;
+            border-radius: 5px;
+            border: 3px solid #007BFF;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .prediction-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .feature-maps {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .feature-map-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-map-container img {
+            width: 400px; /* Increased image size */
+            border-radius: 5px;
+            border: 3px solid #007BFF;
+            margin: 10px 0;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-map-title {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Digit Classifier</h1>
+        <div class="upload-box">
+            <form method="post" enctype="multipart/form-data">
+                <label for="file-upload" class="custom-file-upload">Choose File</label>
+                <input id="file-upload" type="file" name="file" required>
+                <br>
+                <button type="submit">Upload & Predict</button>
+            </form>
+        </div>
+
+        <div class="image-container">
+            {% if uploaded_image %}
+            <h2>Original Image</h2>
+            <img src="{{ url_for('static', filename=uploaded_image) }}" alt="Uploaded Image">
+            {% endif %}
+        </div>
+
+        {% if prediction is not none %}
+        <div class="prediction-box">
+            The model predicts: <strong>{{ prediction }}</strong>
+        </div>
+        {% endif %}
+
+        {% if feature_images and feature_images|length > 0 %}
+        <div class="feature-maps">
+            <h2>Feature Maps from Convolutional Layers</h2>
+            {% for img in feature_images %}
+            <div class="feature-map-container">
+                <div class="feature-map-title">Layer {{ loop.index }}</div>
+                <img src="data:image/png;base64,{{ img }}" alt="Feature Map">
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
